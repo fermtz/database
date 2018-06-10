@@ -1,1 +1,118 @@
+________________________________
+CREATE TABLE [dbo].[Habitacion](
+	[IdHabitacion] [uniqueidentifier] NOT NULL,
+	[Monto] [money] NULL,
+	[Cantidad] [int] NULL,
+	[Descripcion] [varchar](50) NULL,
+	[Dias] [int] NULL,
+ CONSTRAINT [PK_Habitacion] PRIMARY KEY CLUSTERED 
+(
+	[IdHabitacion] ASC
+)WITH (PAD_INDEX  = OFF, STATISTICS_NORECOMPUTE  = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS  = ON, ALLOW_PAGE_LOCKS  = ON) ON [PRIMARY]
+) ON [PRIMARY]
+END
+_______________________________
+CREATE TABLE [dbo].[Categoria](
+	[IdCategoria] [uniqueidentifier] NOT NULL,
+	[Nombre] [varchar](50) NULL,
+	[Costo] [money] NULL,
+ CONSTRAINT [PK_Categoria] PRIMARY KEY CLUSTERED 
+(
+	[IdCategoria] ASC
+)WITH (PAD_INDEX  = OFF, STATISTICS_NORECOMPUTE  = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS  = ON, ALLOW_PAGE_LOCKS  = ON) ON [PRIMARY]
+) ON [PRIMARY]
+END
+GO
+SET ANSI_PADDING OFF
+GO
+INSERT [dbo].[Categoria] ([IdCategoria], [Nombre], [Costo]) VALUES (N'a290c15f-9db0-4c6e-8928-066b163f557c', N'Preferencial', 75.0000)
+INSERT [dbo].[Categoria] ([IdCategoria], [Nombre], [Costo]) VALUES (N'00633439-2264-42ac-9a4c-68a676869166', N'Gerencial', 100.0000)
+INSERT [dbo].[Categoria] ([IdCategoria], [Nombre], [Costo]) VALUES (N'e8f3c9f9-faab-4bb2-ae7f-e4eb5f4db7e2', N'Turista', 50.0000)
+/****** Object:  Table [dbo].[DetalleRuta]     Script Date: 29/04/2018 02:20:28 ******/
+SET ANSI_NULLS ON
 
+_________________________________
+CREATE TABLE [dbo].[DetalleRuta](
+	[IdDetalleRuta] [uniqueidentifier] NOT NULL,
+	[FechaSalida] [date] NULL,
+	[HoraSalida] [time](7) NULL,
+ CONSTRAINT [PK_DetalleRuta] PRIMARY KEY CLUSTERED 
+(
+	[IdDetalleRuta] ASC
+)WITH (PAD_INDEX  = OFF, STATISTICS_NORECOMPUTE  = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS  = ON, ALLOW_PAGE_LOCKS  = ON) ON [PRIMARY]
+) ON [PRIMARY]
+END
+_________________________________
+
+CREATE TABLE [dbo].[Ciudad](
+	[IdCiudad] [uniqueidentifier] NOT NULL,
+	[Nombre] [varchar](50) NULL,
+ CONSTRAINT [PK_Ciudad] PRIMARY KEY CLUSTERED 
+(
+	[IdCiudad] ASC
+)WITH (PAD_INDEX  = OFF, STATISTICS_NORECOMPUTE  = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS  = ON, ALLOW_PAGE_LOCKS  = ON) ON [PRIMARY]
+) ON [PRIMARY]
+END
+___________________________________
+CREATE TABLE [dbo].[Transporte](
+	[IdTransporte] [uniqueidentifier] NOT NULL,
+	[Capacidad] [int] NULL,
+	[IdCompañia] [uniqueidentifier] NULL,
+ CONSTRAINT [PK_Transporte] PRIMARY KEY CLUSTERED 
+(
+	[IdTransporte] ASC
+)WITH (PAD_INDEX  = OFF, STATISTICS_NORECOMPUTE  = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS  = ON, ALLOW_PAGE_LOCKS  = ON) ON [PRIMARY]
+) ON [PRIMARY]
+END
+_______________________________________________
+CREATE TABLE [dbo].[Ruta](
+	[IdRuta] [uniqueidentifier] NOT NULL,
+	[PrecioBase] [money] NULL,
+	[CiudadOrigen] [uniqueidentifier] NULL,
+	[CiudadDestino] [uniqueidentifier] NULL,
+	[IdDetalleRuta] [uniqueidentifier] NULL,
+	[IdTransporte] [uniqueidentifier] NULL,
+ CONSTRAINT [PK_Ruta] PRIMARY KEY CLUSTERED 
+(
+	[IdRuta] ASC
+)WITH (PAD_INDEX  = OFF, STATISTICS_NORECOMPUTE  = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS  = ON, ALLOW_PAGE_LOCKS  = ON) ON [PRIMARY]
+) ON [PRIMARY]
+END
+________________________________________________
+CREATE TABLE [dbo].[Boleto](
+	[IdBoleto] [uniqueidentifier] NOT NULL,
+	[IdRuta] [uniqueidentifier] NULL,
+	[IdTipoBoleto] [uniqueidentifier] NULL,
+	[PrecioTotal]  AS ([dbo].[TotalBoleto]([IdTipoBoleto],[IdRuta])),
+PRIMARY KEY CLUSTERED 
+(
+	[IdBoleto] ASC
+)WITH (PAD_INDEX  = OFF, STATISTICS_NORECOMPUTE  = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS  = ON, ALLOW_PAGE_LOCKS  = ON) ON [PRIMARY]
+) ON [PRIMARY]
+END
+______________________________________________
+CREATE TABLE [dbo].[DetalleVenta](
+	[IdDetalleVenta] [uniqueidentifier] NOT NULL,
+	[IdHotel] [uniqueidentifier] NULL,
+	[IdBoleto] [uniqueidentifier] NULL,
+	[MontoFinal]  AS ([dbo].[TotalDetalleVenta]([IdBoleto],[IdHotel])),
+PRIMARY KEY CLUSTERED 
+(
+	[IdDetalleVenta] ASC
+)WITH (PAD_INDEX  = OFF, STATISTICS_NORECOMPUTE  = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS  = ON, ALLOW_PAGE_LOCKS  = ON) ON [PRIMARY]
+) ON [PRIMARY]
+END
+______________________________________________
+CREATE TABLE [dbo].[Venta](
+	[IdVenta] [uniqueidentifier] NOT NULL,
+	[Fecha] [date] NULL,
+	[Hora] [time](7) NULL,
+	[Total] [money] NULL,
+	[IdDetalleVenta] [uniqueidentifier] NULL,
+ CONSTRAINT [PK_Venta] PRIMARY KEY CLUSTERED 
+(
+	[IdVenta] ASC
+)WITH (PAD_INDEX  = OFF, STATISTICS_NORECOMPUTE  = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS  = ON, ALLOW_PAGE_LOCKS  = ON) ON [PRIMARY]
+) ON [PRIMARY]
+END
+___________________________________________________
